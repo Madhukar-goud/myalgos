@@ -1,8 +1,12 @@
 com/example/demo/Logger.class
+com/example/demo/MethodStats.class
+com/example/demo/ThreeSum.class
+com/example/demo/ExampleAspect.class
+com/example/demo/DemoBean.class
+com/example/demo/Service.class
 com/example/demo/BinarySearch.class
 com/example/demo/DemoApplication.class
-com/example/demo/MethodStats.class
 com/example/demo/QuickFind.class
-com/example/demo/ThreeSum.class
+com/example/demo/LogExecutionTime.class
 com/example/demo/QuickUnion.class
 com/example/demo/WeightedQuickUnion.class
