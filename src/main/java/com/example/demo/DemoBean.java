@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import config.AppConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,10 +13,16 @@ import java.io.FileReader;
  */
 @Configuration
 @ComponentScan(basePackages = "com.example.demo")
+@ComponentScan(basePackages = "config")
 public class DemoBean {
+
+    @Autowired
+    AppConfig config;
+
     @LogExecutionTime
     public void testQuickFind() {
         try {
+            System.out.println(config.toString());
             BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/test.txt"));
             String numOfLines = reader.readLine();
             Integer intNumOfLines = Integer.parseInt(numOfLines);
