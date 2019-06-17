@@ -29,3 +29,6 @@ target/
 **/*.class
 .idea/workspace.xml
 myalgos.iml
+mvnw
+mvnw.cmd
+HELP.md
