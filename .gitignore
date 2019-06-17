@@ -27,3 +27,5 @@ target/
 .idea/**
 *.iml
 **/*.class
+.idea/workspace.xml
+myalgos.iml
