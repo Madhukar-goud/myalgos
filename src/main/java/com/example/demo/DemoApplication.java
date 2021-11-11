@@ -18,7 +18,7 @@ public class DemoApplication {
 //		demoBean.testWeightedQuickUnion();
 		//String currentPath = System.getProperty("user.dir");
 		//CheckForFile.findFilePath( "QuickUnion.java");
-		CaseStudyService caseStudyService = ctx.getBean(CaseStudyService.class);
-		caseStudyService.loadData();
+		ConsecutiveLines consecutiveLines = ctx.getBean(ConsecutiveLines.class);
+		consecutiveLines.loadData();
 	}
 }
