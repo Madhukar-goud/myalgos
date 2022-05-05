@@ -15,11 +15,13 @@ public class TestKafkaProducer {
 
     //Configure this
     private String topicName = "Madhukar";
+    private String retryTopicName = "Madhukar-Retry";
+    private String dlqTopicName = "Madhukar-DLQ";
 
-    public void sendMessage(String message) {
+    public void sendMessage(String topic, String message) {
 
         ListenableFuture<SendResult<String, String>> future =
-                kafkaTemplate.send(topicName, message);
+                kafkaTemplate.send(topic, message);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 
@@ -30,9 +32,7 @@ public class TestKafkaProducer {
             }
             @Override
             public void onFailure(Throwable ex) {
-                //SEND TO DEAD LETTER TOPIC / RETRY QUEUE
-                System.out.println("Unable to send message=["
-                        + message + "] due to : " + ex.getMessage());
+                sendMessage(retryTopicName, message);
             }
         });
     }

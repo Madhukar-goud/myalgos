@@ -20,9 +20,11 @@ public class DemoApplication {
 		//String currentPath = System.getProperty("user.dir");
 		//CheckForFile.findFilePath( "QuickUnion.java");
 		TestKafkaProducer testKafkaProducer = ctx.getBean(TestKafkaProducer.class);
-		testKafkaProducer.sendMessage("Testing 4");
-		testKafkaProducer.sendMessage("Testing 5");
-		testKafkaProducer.sendMessage("Testing 6");
+		testKafkaProducer.sendMessage( "Madhukar","Testing 4");
+		testKafkaProducer.sendMessage("Madhukar","Testing 5");
+		testKafkaProducer.sendMessage("Madhukar","Testing 6");
+		testKafkaProducer.sendMessage("Madhukar","Testing 7 Retry");
+		testKafkaProducer.sendMessage("Madhukar","Testing 7 Retry dlq 0");
 
 	}
 }
