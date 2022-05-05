@@ -2,9 +2,6 @@ package com.example.demo.kafka;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.retry.support.RetrySynchronizationManager;
 import org.springframework.stereotype.Service;
 
 @Service
