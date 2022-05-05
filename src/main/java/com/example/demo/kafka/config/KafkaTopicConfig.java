@@ -29,4 +29,13 @@ public class KafkaTopicConfig {
     public NewTopic topic1() {
         return new NewTopic("Madhukar", 1, (short) 1);
     }
+
+    @Bean
+    public NewTopic topic2() {
+        return new NewTopic("Madhukar-retry", 1, (short) 1);
+    }
+    @Bean
+    public NewTopic topic3() {
+        return new NewTopic("Madhukar-DLQ", 1, (short) 1);
+    }
 }
