@@ -1,28 +1,80 @@
+version: '2'
 services:
-  zoo1:
-    image: zookeeper:3.4.9
-    hostname: zoo1
-    ports:
-      - 2181:2181
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
     environment:
-      ZOO_MY_ID: 1
-      ZOO_PORT: 2181
-      ZOO_SERVERS: server.1=zoo1:2888:3888
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
 
-  kafka1:
-    image: confluentinc/cp-kafka:4.0.0
-    ports:
-      - 9092:9092
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:latest
     environment:
-      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
-      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
-      KAFKA_BROKER_ID: 1
-      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    links:
-      - zoo1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 32181:2181
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
     depends_on:
-      - zoo1
+      - zookeeper-1
+      - zookeeper-2
+
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+    ports:
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+#  schemaregistry:
+#    image: confluentinc/cp-schema-registry:latest
+#    restart: always
+#    depends_on:
+#      - zookeeper-1
+#      - zookeeper-2
+#      - kafka-1
+#      - kafka-2
+#    environment:
+#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper-1:2181,zookeeper-2:2181"
+#      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+#      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8085"
+#    ports:
+#      - 8085:8085
+
+
+#  restproxy:
+#    image: confluentinc/cp-kafka-rest:latest
+#    restart: always
+#    depends_on:
+#      - kafka1
+#    environment:
+#      KAFKA_REST_ZOOKEEPER_CONNECT: "zookeeper:2181"
+#      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+#      KAFKA_REST_SCHEMA_REGISTRY_URL: "http://schemaregistry:8085"
+#      KAFKA_REST_HOST_NAME: restproxy
+#      KAFKA_REST_DEBUG: "true"
+#    ports:
+#      - 8082:8082
 
   kafka-ui:
     image: provectuslabs/kafka-ui
@@ -35,7 +87,7 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka1:9092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zoo1:2181
     depends_on:
-      - kafka1
+      - kafka-1
 
   db:
     image: postgres:14.1-alpine
